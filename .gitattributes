@@ -1,2 +1,596 @@
-# Auto detect text files and perform LF normalization
-* text=auto
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include<stdbool.h>
+#include <conio.h>
+#include<time.h>
+
+char ch[10][130]={"bus101","bus102","bus103","bus104","bus105","bus106"};
+
+void message(){
+  int i, j;
+  printf("\n\n\n");
+
+  for (i = 1; i <= 10; i++)
+  {
+    printf("            ");
+    for (j = 1; j <= 50; j++)
+    {
+      if (i == 1 || i == 10 || j == 1 || j == 50)
+        printf("* ");
+      else
+        printf("  ");
+    }
+    printf("\n");
+
+    if (i == 5)
+    {
+      printf("            *                                  1-Enter (1) as a client                                        *\n");
+      printf("            *                                  2-Enter (2) as an admin                                        *\n");
+    }
+  }
+  printf("\n\n\n");
+}
+
+void decorate_message(char* message) {
+  int message_length = strlen(message);
+  int num_dashes = message_length + 4;
+  //int half_num_dashes = num_dashes / 2;
+printf("                                     ");
+  // Print top row of dashes
+  int i;
+  for (i = 0; i < num_dashes; i++) {
+
+    printf("-");
+  }
+  printf("\n");
+
+  // Print message with leading and trailing spaces
+  printf("                                     ");
+  printf("- %s -\n", message);
+  int j;
+  // Print bottom row of dashes
+  printf("                                     ");
+
+  for (j = 0; j < num_dashes; j++) {
+    printf("-");
+  }
+  printf("\n");
+}
+
+void bus()
+{
+    system("cls");
+    printf("\n\n\n");
+    printf("=========================================== BUS RESERVATION SYSTEM ============================================\n\n\n");
+    printf("\t\t\t\t ***ID des autobus disponible pour service ");
+    printf("\n\n\n");
+    printf("\n");
+    printf("\t\t\t\t\t[1]  =>  %s\n",ch[0]);
+    printf("\n");
+    printf("\t\t\t\t\t[2]  =>  %s\n",ch[1]);
+    printf("\n");
+	printf("\t\t\t\t\t[3]  =>  %s\n",ch[2]);
+    printf("\n");
+	printf("\t\t\t\t\t[4]  =>  %s\n",ch[3]);
+    printf("\n");
+	printf("\t\t\t\t\t[5]  =>  %s\n",ch[4]);
+	printf("\n");
+	printf("\t\t\t\t\t[5]  =>  %s\n",ch[5]);
+}
+
+
+
+ //declaration de type voyage
+
+typedef struct Voyage {
+    char id_bus[50];
+    char destination[50];
+    int capacite;
+    char date[50];
+    float price ;
+
+}Voyage;
+
+ //declaration de type reservation
+
+typedef  struct reservation{
+   char destination[50];
+   char comfort[50] ;
+   float price;
+   char id_Bus[50];
+   int cin_voy ;
+}resevation;
+
+ //declaration de type voyageur
+typedef  struct voyageur{
+   int cin ;
+   char nom[50];
+   int age;
+   char prenom[50] ;
+   long int num;
+   char mail[50] ;
+   char adresse[50] ;
+}voyageur;
+voyageur liste_voyageurs[200];
+
+void nouvCompte()
+{
+    struct voyageur voy;
+    FILE * file;
+      printf("\n\tVOS COORDONNEES ?: ");
+      printf("\n\t________________________________________") ;
+      printf("\n\tNOM             : ");
+      scanf("%s",&voy.nom);
+      printf("\n\tPRENOM          : ");
+      scanf("%s",&voy.prenom);
+      printf("\n\tNUMERO          : ");
+      scanf("%d",&voy.num);
+      printf("\n\tMAIL            : ");
+      scanf("%s",&voy.mail);
+      printf("\n\tADRESSE         : ");
+      scanf("%s",&voy.adresse);
+      printf("\n\tCIN              : ");
+      scanf("%d",&voy.cin);
+      printf("\n\tAGE             : ");
+      scanf("%d",&voy.age);
+      file = fopen("voyageur.txt","a");
+      fwrite(&voy,sizeof(voy),1,file);
+      if (fwrite !=0){
+        printf("\tCompte voyageur ajouter avec succes ");
+        printf("\n\t________________________________________") ;}
+      else
+        printf("\tERREUR!");
+      fclose(file);
+}
+void ajouter_voyage()
+{   struct  Voyage vb;
+    FILE * file;
+      printf("\n\tAJOUTER LES COORDONNEES DES VOYAGES AVEC CELLES DES BUS: ");
+      printf("\n\t________________________________________") ;
+      printf("\n\tID OF BUS              : ");
+      scanf("%s",&vb.id_bus);
+      printf("\n\tDESTINATION DU VOYAGE          : ");
+      scanf("%s",&vb.destination);
+      printf("\n\tCAPACITEE DU BUS         : ");
+      scanf("%d",&vb.capacite);
+      printf("\n\tPRIX DU VOYAGE        : ");
+      scanf("%f",&vb.price);
+      printf("\n\tJOUR DU VOYAGE        : ");
+      scanf("%s",&vb.date);
+
+      system("cls");
+      printf("=========================================== BUS RESERVATION SYSTEM ============================================\n\n\n");
+      file = fopen("voyage.txt","a");
+      fwrite(&vb,sizeof(vb),1,file);
+      if (fwrite !=0){
+        printf("\t voyage ajouter avec succes ");
+        printf("\n\t________________________________________") ;}
+      else
+        printf("\tERREUR!");
+      fclose(file);
+
+}
+
+void aff_bus_detail()
+{   printf("=========================================== BUS RESERVATION SYSTEM ============================================\n\n\n");
+    FILE * file;
+    struct Voyage vo;
+    Voyage liste_voy[100];
+    file = fopen("voyage.txt","r");
+    int nbVoyage = 0 ;
+    while(fread(&vo,sizeof(struct Voyage),1,file)){
+        liste_voy[nbVoyage]=vo;
+        nbVoyage++ ;
+    }
+    fclose(file);
+    printf("\nLe depart est toujours *Tunis* dans notre application e-bus\n");
+    printf("Voici les detailles des voyages et des bus");
+    for(int j=0;j<nbVoyage;j++){
+      printf("\n________________________________________") ;
+      printf("\nID OF BUS                : %s",liste_voy[j].id_bus);
+      printf("\nDESTINATION DU VOYAGE    : %s",liste_voy[j].destination);
+      printf("\nJOUR DU VOYAGE           : %s",liste_voy[j].date);
+      printf("\nCAPACITEE DU BUS         : %d",liste_voy[j].capacite);
+      printf("\nPRIX DU VOYAGE           : %.2f",liste_voy[j].price);
+
+
+    }
+    printf("\n________________________________________") ;
+}
+
+void afficher_voyageur()
+{
+    printf("=========================================== BUS RESERVATION SYSTEM ============================================\n\n\n");
+    FILE * file;
+    struct voyageur voya;
+    voyageur liste_voyageur[100];
+    file = fopen("voyageur.txt","r");
+    int nbVoyageur = 0 ;
+    while(fread(&voya,sizeof(struct voyageur),1,file)){
+        liste_voyageur[nbVoyageur]=voya;
+        nbVoyageur++ ;
+    }
+    fclose(file);
+
+    printf("Voici les detailles des voyageurs\n");
+    for(int j=0;j<nbVoyageur;j++){
+      printf("\n________________________________________") ;
+      printf("\nCIN     : %d",liste_voyageur[j].cin);
+      printf("\nNOM     : %s",liste_voyageur[j].nom);
+      printf("\nPRENOM  : %s",liste_voyageur[j].prenom);
+      printf("\nAGE     : %d",liste_voyageur[j].age);
+      printf("\nNUM TEL : %d",liste_voyageur[j].num);
+      printf("\nMAIL    : %s",liste_voyageur[j].mail);
+      printf("\nADRESSE : %s",liste_voyageur[j].adresse);
+
+    }
+    printf("\n________________________________________") ;
+
+}
+
+
+void rechercher_selon_date()
+{
+  printf("=========================================== BUS RESERVATION SYSTEM ============================================\n\n\n");
+    FILE * file;
+    struct Voyage vo;
+    Voyage liste_voy[100];
+    file = fopen("voyage.txt","r");
+    int nbVoyage = 0 ;
+    while(fread(&vo,sizeof(struct Voyage),1,file)){
+        liste_voy[nbVoyage]=vo;
+        nbVoyage++ ;
+    }
+    fclose(file);
+    printf("\nPs : Vous pouvez saisir seulement le jour  "); //saisir le jour pour reserver un voyage dans cette semaine
+    printf("\nLundi | Mardi | Mercredi | Jeudi | Vendredi | Samedi | Dimanche ");
+    char da;
+
+      printf("\n________________________________________") ;
+      printf("\n***saisir le jour du voyage souhaitee : \n");
+      printf("ta reponse : ");
+      scanf("%s",&da);
+    for(int j=0;j<nbVoyage;j++){
+      if (strcmp(liste_voy[j].date,da)){
+        printf("\n________________________________________") ;
+        printf("\nID OF BUS                : %s",liste_voy[j].id_bus);
+        printf("\nDESTINATION DU VOYAGE    : %s",liste_voy[j].destination);
+        printf("\nJOUR DU VOYAGE           : %s",liste_voy[j].date);
+        printf("\nCAPACITEE DU BUS         : %d",liste_voy[j].capacite);
+        printf("\nPRIX DU VOYAGE           : %.2f",liste_voy[j].price);
+        printf("\n________________________________________") ;
+      }
+      else printf("Il n y a pas de voyage dans la date entree precedement");
+
+    }
+
+}
+
+
+
+void rechercher_selon_destination()
+{
+    printf("=========================================== BUS RESERVATION SYSTEM ============================================\n\n\n");
+    FILE * file;
+    struct Voyage vo;
+    Voyage liste_voy[100];
+    file = fopen("voyage.txt","r");
+    int nbVoyage = 0 ;
+    while(fread(&vo,sizeof(struct Voyage),1,file)){
+        liste_voy[nbVoyage]=vo;
+        nbVoyage++ ;
+    }
+    fclose(file);
+    printf("\n\t_____________________________________");//depart du Tunis
+    printf("\n\tVEUILLEZ CHOISIR UNE DESTINATION,\nle depart est Tunis:\n");
+    printf("\t\t1.Bizerte \n");
+    printf("\t\t2.Nabeul \n");
+    printf("\t\t3.SidiBouzid \n");
+    printf("\t\t4.Gafsa \n");
+    printf("\t\t5.Sfax \n\t");
+    printf("_______________________________________\n\t: ");
+    char de;
+
+      printf("\n____________________________________________") ;
+      printf("\n***saisir la destination du voyage souhaitee : \n");
+      printf("\t\tTA REPONSE : ");
+      scanf("%s",&de);
+    for(int j=0;j<nbVoyage;j++){
+      if (strnicmp(liste_voy[j].destination,de,strlen(de))){
+        printf("\n________________________________________") ;
+        printf("\nID OF BUS                : %s",liste_voy[j].id_bus);
+        printf("\nDESTINATION DU VOYAGE    : %s",liste_voy[j].destination);
+        printf("\nJOUR DU VOYAGE           : %s",liste_voy[j].date);
+        printf("\nCAPACITEE DU BUS         : %d",liste_voy[j].capacite);
+        printf("\nPRIX DU VOYAGE           : %.2f",liste_voy[j].price);
+        printf("\n________________________________________") ;
+      }
+      else printf("Il n y a pas de voyage de destination entree precedement");
+
+    }
+
+}
+
+void creer_nouv_reservation()
+{
+      struct reservation res;
+      FILE * file;
+      printf("\n\tINFORMATIONS SUR LA RESERVATION ?: ");
+      printf("\n\t________________________________________") ;
+      printf("\n\tDESTINATION            : ");
+      scanf("%s",&res.destination);
+      printf("\n\tPRIX          : ");
+      scanf("%f",&res.price);
+      printf("\n\tID_BUS          : ");
+      scanf("%s",&res.id_Bus);
+      printf("\n\tCIN            : ");
+      scanf("%d",&res.cin_voy);
+      printf("\n\tCOMFORT repondre par oui ou non      : ");
+      scanf("%s",&res.comfort);
+      file = fopen("reservation.txt","a");
+      fwrite(&res,sizeof(res),1,file);
+      if (fwrite !=0){
+        printf("\t\nreservation ajouter avec succes ");
+        printf("\n\t________________________________________") ;}
+      else
+        printf("\tERREUR!");
+      fclose(file);
+}
+
+
+
+void aff_reservation()
+{
+   printf("=========================================== BUS RESERVATION SYSTEM ============================================\n\n\n");
+    FILE * file;
+    struct reservation res;
+    struct reservation liste_res[100];
+    file = fopen("reservation.txt","r");
+    int nbRes = 0 ;
+    while(fread(&res,sizeof(struct reservation),1,file)){
+        liste_res[nbRes]=res;
+        nbRes++ ;
+    }
+    fclose(file);
+    int a=1;
+    char dss;
+    printf("\n***saisir la CIN de votre compte voyageur  : \n");
+    printf("\t\tTA REPONSE : ");
+    scanf("%d",&dss);
+    for(int j=0;j<nbRes;j++){
+
+
+            if (strnicmp(liste_res[j].cin_voy,dss,strlen(dss))){
+                    a=0;
+        printf("\n________________________________________") ;
+        printf("\nID OF BUS                : %s",liste_res[j].id_Bus);
+        printf("\nDESTINATION DU VOYAGE    : %s",liste_res[j].destination);
+        printf("\nCOMFORT ?                : %s",liste_res[j].comfort);
+        printf("\nCIN                      : %d",liste_res[j].cin_voy);
+        printf("\nPRIX DU VOYAGE           : %.2f",liste_res[j].price);
+        printf("\n________________________________________") ;
+      }
+    }
+      if (a==1) printf("Il n y a pas de voyage pour le compte entree precedement");
+
+}
+
+void modif()
+{
+   printf("=========================================== BUS RESERVATION SYSTEM ============================================\n\n\n");
+    FILE * file;
+    struct reservation res;
+    struct reservation nvRes;
+    struct reservation liste_res[100];
+     printf("\n\tMODIFIER LES INFORMATIONS DE VOTRE RESERVATION ?: ");
+      printf("\n\t________________________________________") ;
+      printf("\n\tnouv DESTINATION ou entrer l ancien DESTINATION           : ");
+      scanf("%s",&nvRes.destination);
+      printf("\n\tnouv PRIX ou entrer l ancien PRIX           : ");
+      scanf("%f",&nvRes.price);
+      printf("\n\tnouv ID_BUS ou entrer l ancien ID         : ");
+      scanf("%s",&nvRes.id_Bus);
+      printf("\n\tnouv CIN ou entrer l ancien CIN             : ");
+      scanf("%d",&nvRes.cin_voy);
+      printf("\n\tCOMFORT repondre par oui ou non      : ");
+      scanf("%s",&nvRes.comfort);
+      file = fopen("reservation.txt","r");
+      int nbRes = 0 ;
+    while(fread(&res,sizeof(struct reservation),1,file)){
+        liste_res[nbRes]=res;
+        nbRes++ ;
+    }
+    fclose(file);
+    remove("reservation.txt");
+    FILE * nf;
+    nf = fopen("nv.txt","a");
+    for(int j=0;j<nbRes;j++)
+    {
+        if(nvRes.cin_voy==liste_res[j].cin_voy)
+            fwrite(&nvRes,sizeof(liste_res[j]),1,nf);
+        else
+            fwrite(&liste_res[j],sizeof(liste_res[j]),1,nf);
+    }
+    fclose(nf);
+    rename("nv.txt","reservation.txt");
+}
+
+void supprimer()
+{
+     printf("=========================================== BUS RESERVATION SYSTEM ============================================\n\n\n");
+    FILE * file;
+    int code;
+    struct reservation res;
+    struct reservation liste_res[100];
+     printf("\n\tMODIFIER LES INFORMATIONS DE VOTRE RESERVATION ?: ");
+      printf("\n\t________________________________________") ;
+      printf("\n\tENTREZ LA CIN DE VOTRE COMPTE            : ");
+      scanf("%d",&code);
+
+      file = fopen("reservation.txt","r");
+      int nbRes = 0 ;
+    while(fread(&res,sizeof(struct reservation),1,file)){
+        liste_res[nbRes]=res;
+        nbRes++ ;
+    }
+    fclose(file);
+    remove("reservation.txt");
+    FILE * nnf;
+    nnf = fopen("nnv.txt","a");
+    for(int j=0;j<nbRes;j++)
+    {
+        if(code!=liste_res[j].cin_voy)
+            fwrite(&liste_res[j],sizeof(liste_res[j]),1,nnf);
+    }
+    fclose(nnf);
+    rename("nnv.txt","reservation.txt");
+}
+
+int main()
+{
+     int entree1;
+     int truee=1;
+
+     int n,nbvoy,i;
+do{
+    do{
+    decorate_message("Bienvenu dans notre E-BUS APPLICATION");
+    message();
+    printf("                                        -------------------------------------------\n\t                               TA REPONSE : ");
+    scanf("%d",&entree1);
+    system("cls");}while (entree1!=1 && entree1!=2);
+
+    switch(entree1){
+        int choix;
+        int choix3;
+        int choix4;
+
+    case 1: //pour la partie client
+        while (truee==1) {
+            do{
+                    decorate_message("Bienvenu dans notre E-BUS APPLICATION ");
+    printf("\n\n\n                                ----------------------------------------------------------\n");
+    printf("\n\t                         SAISIR(1) : pour Creer un nouveau compte  \n");
+    printf("\t                         SAISIR(2) : pour Afficher les details des bus. \n");
+    printf("\t                         SAISIR(3) : pour chercher une voyage. \n");
+    printf("\t                         SAISIR(4) : pour Afficher et modifier les details d une\n");
+    printf("\t                                     reservation. \n");
+    printf("\t                         SAISIR(5) : pour Creer une nouvelle reservation. \n\n");
+    printf("                                ----------------------------------------------------------\n\t                               TA REPONSE : ");
+             scanf("%d",&choix);
+             system("cls");}while (choix>5 || choix<1);
+
+             switch(choix){
+                 int choix2;
+             case 1:
+                 nouvCompte();
+                 break ;
+
+             case 5:
+                 creer_nouv_reservation();
+                 break ;
+             case 2:
+                 aff_bus_detail();
+                 break;
+             case 4:
+                 do{decorate_message("Bienvenu dans notre E-BUS APPLICATION ");
+    printf("\n\n\n                                    ******************************************************\n");
+    printf("\n\t                               SAISIR(1) : pour afficher les détails d’une réservation. \n");
+    printf("\t                               SAISIR(2) : pour supprimer une reservation. \n");
+    printf("\t                               SAISIR(3) : pour modifier une resvation \n\n");
+    printf("                                    ******************************************************\n\t                               TA REPONSE : ");
+    scanf("%d",&choix2);
+    system("cls");
+             }while(choix2>3 || choix2<1);
+
+             switch(choix2){
+             case 1:
+                 aff_reservation();
+                 break ;
+
+             case 2:
+                 supprimer();
+                 break;
+             case 3:
+                 modif();
+                 break;}
+    break;
+
+    case 3:
+        do{decorate_message("Bienvenu dans notre E-BUS APPLICATION ");
+    printf("\n\n\n                                    ******************************************************\n");
+    printf("\n\t                               SAISIR(1) : pour chercher un voyage selon la date \n");
+    printf("\t                               SAISIR(2) : pour chercher un voyage selon la destination \n\n");
+    printf("                                    ******************************************************\n\t                               TA REPONSE : ");
+    scanf("%d",&choix3);
+            system("cls"); }while(choix3>2 || choix3<1);
+             switch(choix3){
+        case 1:
+            rechercher_selon_date();
+
+            break;
+        case 2:
+            rechercher_selon_destination();
+
+            break;}
+
+             }
+             do{
+             printf("\t\n\  ---------------------------------------\n");
+             printf("\t\n\tPRESS (0) TO EXIT.  ");
+   printf("\n\tPRESS (1) TO BACK.  \n");
+   printf("\n\  ---------------------------------------\n");
+   scanf("%d",&truee);
+   system("cls") ;}while((truee!=1)&&(truee!=0));}
+break ;
+
+                 // pour l admin
+
+                 case 2:
+                  while (truee==1) {
+    do{decorate_message("Bienvenu dans notre E-BUS APPLICATION");
+    printf("\n\n\n                                    ******************************************************\n");
+    printf("\n\t                               SAISIR(1) : pour ajouter un voyage. \n");
+    printf("\t                               SAISIR(2) : pour afficher toutes les comptes  ");
+    printf("\t\t\t                                                          voyageurs dans la base de donnee. \n\n");
+    printf("                                    ******************************************************\n\t                               TA REPONSE : ");
+    scanf("%d",&choix4);
+            system("cls"); }while(choix4>2 || choix4<1);
+
+
+            switch(choix4){
+            case 1:
+                  bus();
+                  printf("Donner le nombre de voyages a ajouter : \n");
+                  printf("---------------------------------------\n");
+                  scanf("%d",&nbvoy);
+                  system("cls");
+                  printf("=========================================== BUS RESERVATION SYSTEM ============================================\n\n\n");
+                  for (i=0;i<nbvoy;i++){
+                      printf("voyage [%d] : \n",i+1);
+                      ajouter_voyage();}
+
+                  break ;
+
+            case 2:
+               afficher_voyageur();
+               break ;
+}
+            do{
+   printf("\n\n\n\n  ---------------------------------------\n");
+   printf("\n\tPRESS (0) TO EXIT.  ");
+   printf("\n\tPRESS (1) TO BACK.  \n");
+   printf("\n\  ---------------------------------------\n");
+   scanf("%d",&truee);
+   system("cls") ;}while((truee!=1)&&(truee!=0));}
+}
+break ;
+ }while(truee!=0);
+    printf("\n\n ---------------------------------------\n");
+   printf("    Merci pour votre confience, aa bientot..");
+ printf("\n\  ---------------------------------------\n");
+   return 0;
+}
+
+
